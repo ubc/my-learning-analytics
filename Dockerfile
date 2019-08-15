@@ -34,7 +34,10 @@ COPY requirements.txt /code/requirements.txt
 RUN apt-get update && \
     apt-get install -y --no-install-recommends netcat vim-tiny jq python3-dev xmlsec1 cron && \
     apt-get clean -y && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    python -m nltk.downloader averaged_perceptron_tagger && \
+    python -m nltk.downloader wordnet && \
+    python -m nltk.downloader stopwords
 
 # NOTE: project files likely to change between dev builds
 COPY . /code/

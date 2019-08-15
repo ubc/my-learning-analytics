@@ -10,7 +10,7 @@
         "localhost"
     ],
     "/* Configuration of CSP see https://django-csp.readthedocs.io/en/latest/configuration.html": "*/",
-    
+
     "/* To enable this at all you must set have the CSP key set": "*/",
     "/* and REPORT_ONLY should be be false, otherwise it will just console Warn": "*/",
     "CSP": {
@@ -177,5 +177,7 @@
             "/* mention if the caliper event data is providing long or short canvas id and change the query to store long id as in this case": "*/",
             "canvas_course_id_format": "SHORT"
         }
-    }
+    },
+    "/* Directory for models generated for Natural Language Processing. defaults to `/nlp_models`": "*/",
+    "NLP_MODEL_DIRECTORY": "/nlp_models"
 }

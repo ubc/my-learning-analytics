@@ -20,6 +20,33 @@ logger = logging.getLogger(__name__)
 from model_utils import Choices
 
 
+class Account(models.Model):
+    id = models.BigIntegerField(primary_key=True, verbose_name="Account Id")
+    canvas_id = models.BigIntegerField(verbose_name="Canvas Id")
+    name = models.CharField(max_length=255, verbose_name="Name")
+    depth = models.IntegerField(verbose_name="Depth")
+    parent_account_id = models.BigIntegerField(blank=True, null=True, verbose_name="Parent Account Id")
+    grandparent_account_id = models.BigIntegerField(blank=True, null=True, verbose_name="Grandparent Account Id")
+    root_account_id = models.BigIntegerField(blank=True, null=True, verbose_name="Root Account Id")
+    subaccount1_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 1 Id")
+    subaccount2_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 2 Id")
+    subaccount3_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 3 Id")
+    subaccount4_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 4 Id")
+    subaccount5_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 5 Id")
+    subaccount6_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 6 Id")
+    subaccount7_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 7 Id")
+    subaccount8_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 8 Id")
+    subaccount9_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 9 Id")
+    subaccount10_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 10 Id")
+    subaccount11_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 11 Id")
+    subaccount12_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 12 Id")
+    subaccount13_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 13 Id")
+    subaccount14_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 14 Id")
+    subaccount15_id = models.BigIntegerField(blank=True, null=True, verbose_name="Subaccount 15 Id")
+
+    class Meta:
+        db_table = 'account'
+
 class AcademicTerms(models.Model):
     id = models.BigIntegerField(primary_key=True, verbose_name="Term Id")
     canvas_id = models.BigIntegerField(verbose_name="Canvas Id")
@@ -147,6 +174,7 @@ class DiscussionFlattened(models.Model):
     # topic_id + entry_id = discussion entry record
     topic_id = models.BigIntegerField(verbose_name="Discussion Topic Id")
     entry_id = models.BigIntegerField(blank=True, null=True, verbose_name="Discussion Entry Id")
+    parent_entry_id = models.BigIntegerField(blank=True, null=True, verbose_name="Parent Discussion Entry Id")
     course_id = models.BigIntegerField(verbose_name="Course Id") # stores course_id or group_parent_course_id
     assignment_id = models.BigIntegerField(blank=True, null=True, verbose_name="Assignment Id")
     group_id = models.BigIntegerField(blank=True, null=True, verbose_name="Group Id")
@@ -156,10 +184,23 @@ class DiscussionFlattened(models.Model):
     # title only for discussion topic record
     title = models.CharField(blank=True, null=True, max_length=255, verbose_name="Title", default='')
     message = models.TextField(verbose_name="Message")
+    created_at = models.DateTimeField(verbose_name="Created At", blank=True, null=True)
     updated_at = models.DateTimeField(verbose_name="Updated At", blank=True, null=True)
 
     class Meta:
         db_table = 'discussion_flattened'
+        unique_together = (('topic_id', 'entry_id'),)
+
+class DiscussionCoherence(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name="Table Id")
+    # topic_id + null entry_id = discussion topic record
+    # topic_id + entry_id = discussion entry record
+    topic_id = models.BigIntegerField(verbose_name="Discussion Topic Id")
+    entry_id = models.BigIntegerField(blank=True, null=True, verbose_name="Discussion Entry Id")
+    coherence = models.FloatField(blank=True, null=True, verbose_name="Coherence")
+
+    class Meta:
+        db_table = 'discussion_coherence'
         unique_together = (('topic_id', 'entry_id'),)
 
 class CourseQuerySet(models.QuerySet):

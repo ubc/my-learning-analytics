@@ -19,6 +19,7 @@ import pandas as pd
 from google.cloud import bigquery
 
 from django_cron import CronJobBase, Schedule
+from dashboard.nlp.course_discussions import process_course_discussions
 
 logger = logging.getLogger(__name__)
 
@@ -464,18 +465,19 @@ class DashboardCronJob(CronJobBase):
                 topic_info as (select dtf.discussion_topic_id, dtf.assignment_id, dtf.group_id, ud.global_canvas_id as user_id, gi.is_public as group_is_public
                                from discussion_topic_fact dtf left join grp_info gi on dtf.group_id = gi.group_id left join user_dim ud on dtf.user_id = ud.id
                                where dtf.course_id = '{data_warehouse_course_id}' or gi.parent_course_id = '{data_warehouse_course_id}'),
-                topic_more as (select ti.discussion_topic_id as topic_id, null as entry_id, '{data_warehouse_course_id}' as course_id,
-                               CAST(ti.assignment_id as VARCHAR), CAST(ti.group_id as VARCHAR), CAST(ti.user_id as VARCHAR), ti.group_is_public,
-                               dtd.title, dtd.message, dtd.updated_at
+                topic_more as (select ti.discussion_topic_id as topic_id, null as entry_id, null as parent_entry_id,
+                               '{data_warehouse_course_id}' as course_id, CAST(ti.assignment_id as VARCHAR), CAST(ti.group_id as VARCHAR),
+                               CAST(ti.user_id as VARCHAR), ti.group_is_public, dtd.title, dtd.message, dtd.created_at, dtd.updated_at
                                from discussion_topic_dim dtd join topic_info ti on dtd.id = ti.discussion_topic_id
-                               where dtd.type is null and dtd.workflow_state = 'active'),
-                entry_info as (select tm.topic_id, def.discussion_entry_id, tm.assignment_id, tm.group_id, ud.global_canvas_id as user_id, tm.group_is_public
+                               where dtd.type is null and dtd.workflow_state in ('locked', 'active')),
+                entry_info as (select tm.topic_id, def.discussion_entry_id, def.parent_discussion_entry_id,
+                               tm.assignment_id, tm.group_id, ud.global_canvas_id as user_id, tm.group_is_public
                                from discussion_entry_fact def join topic_more tm on def.topic_id = tm.topic_id left join user_dim ud on def.user_id = ud.id)
                 select * from topic_more
                 UNION
-                select ei.topic_id, CAST(ei.discussion_entry_id as VARCHAR) as entry_id, '{data_warehouse_course_id}' as course_id,
-                CAST(ei.assignment_id as VARCHAR), CAST(ei.group_id as VARCHAR), CAST(ei.user_id as VARCHAR), ei.group_is_public,
-                null as title, ded.message, ded.updated_at
+                select ei.topic_id, CAST(ei.discussion_entry_id as VARCHAR) as entry_id, CAST(ei.parent_discussion_entry_id as VARCHAR) as parent_entry_id,
+                '{data_warehouse_course_id}' as course_id, CAST(ei.assignment_id as VARCHAR), CAST(ei.group_id as VARCHAR),
+                CAST(ei.user_id as VARCHAR), ei.group_is_public, null as title, ded.message, ded.created_at, ded.updated_at
                 from discussion_entry_dim ded join entry_info ei on ded.id = ei.discussion_entry_id
                 where ded.workflow_state = 'active'
                 order by topic_id, entry_id nulls first
@@ -499,6 +501,30 @@ class DashboardCronJob(CronJobBase):
         term_sql = f"select id, canvas_id, name, date_start, date_end from enrollment_term_dim where date_start > '{settings.EARLIEST_TERM_DATE}'"
         logger.debug(term_sql)
         status += util_function(None, term_sql, 'academic_terms')
+
+        return status
+
+
+    def update_account(self):
+        # cron status
+        status = ""
+
+        logger.debug("in update with data warehouse account")
+
+        # delete all records in the table first
+        status += deleteAllRecordInTable("account")
+
+        #select term records from DATA_WAREHOUSE
+        account_sql = f"""
+            select id, canvas_id, name, depth, parent_account_id, grandparent_account_id, root_account_id,
+            subaccount1_id, subaccount2_id, subaccount3_id, subaccount4_id, subaccount5_id,
+            subaccount6_id, subaccount7_id, subaccount8_id, subaccount9_id, subaccount10_id,
+            subaccount11_id, subaccount12_id, subaccount13_id, subaccount14_id, subaccount15_id
+            from account_dim
+            where workflow_state = 'active'
+        """
+        logger.debug(account_sql)
+        status += util_function(None, account_sql, 'account')
 
         return status
 
@@ -560,6 +586,9 @@ class DashboardCronJob(CronJobBase):
         logger.info("** term")
         status += self.update_term()
 
+        logger.info("** account")
+        status += self.update_account()
+
         if len(Course.objects.get_supported_courses()) == 0:
             logger.info("Skipping course-related table updates...")
             status += "Skipped course-related table updates.\n"
@@ -591,6 +620,10 @@ class DashboardCronJob(CronJobBase):
             logger.info("** discussion")
             # TODO: add a if condition around this if in VIEWS_DISABLED
             status += self.update_discussion()
+
+            # for data_warehouse_course_id in Course.objects.get_supported_courses():
+            #     process_course_discussions(data_warehouse_course_id)
+            #     #async_task(process_course_discussions, data_warehouse_course_id)
 
         if settings.DATA_WAREHOUSE_IS_UNIZIN:
             logger.info("** informational")

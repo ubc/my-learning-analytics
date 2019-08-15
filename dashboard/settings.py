@@ -440,6 +440,9 @@ CANVAS_FILE_ID_NAME_SEPARATOR = "|"
 
 RESOURCE_ACCESS_CONFIG = ENV.get("RESOURCE_ACCESS_CONFIG", {})
 
+# Natural Language Processing settings
+NLP_MODEL_DIRECTORY = ENV.get("NLP_MODEL_DIRECTORY", os.path.join('nlp_models'))
+
 # Django CSP Settings, load up from file if set
 if "CSP" in ENV:
     MIDDLEWARE_CLASSES += ['csp.middleware.CSPMiddleware',]

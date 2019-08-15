@@ -24,6 +24,8 @@ services:
       # use the container's node_modules folder (don't override)
       - /code/node_modules/
       - /code/static/
+      # persist nlp models
+      - ./.data/nlp_models:/nlp_models
       - ${HOME}/mylasecrets:/secrets
     ports:
       - "5001:5000"
