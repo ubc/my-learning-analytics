@@ -53,9 +53,11 @@ while ! nc -z ${MYSQL_HOST} ${MYSQL_PORT}; do
 done
 
 echo "Setting Git info variables"
-export GIT_REPO="$(git config --local remote.origin.url)"
-export GIT_COMMIT="$(git rev-parse HEAD)"
-export GIT_BRANCH="$(git name-rev $GIT_COMMIT --name-only)"
+if [ -d .git ]; then
+  export GIT_REPO="$(git config --local remote.origin.url)"
+  export GIT_COMMIT="$(git rev-parse HEAD)"
+  export GIT_BRANCH="$(git name-rev $GIT_COMMIT --name-only)"
+fi;
 
 echo Running python startups
 python manage.py migrate

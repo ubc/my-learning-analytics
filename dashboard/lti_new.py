@@ -24,6 +24,10 @@ TA = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#TeachingAssis
 COURSE_MEMBERSHIP = 'http://purl.imsglobal.org/vocab/lis/v2/membership'
 DUMMY_CACHE = 'DummyCache'
 
+# do not require deployments in config
+class ExtendedDjangoMessageLaunch(DjangoMessageLaunch):
+    def validate_deployment(self):
+        return self
 
 class LTIError:
     def __init__(self, msg):
@@ -45,15 +49,8 @@ def get_tool_conf():
     # There should be one key per platform and the name relay on platforms generic domain not institution specific
     platform_domain = list(lti_config.keys())[0]
     client_id = lti_config[platform_domain][0]['client_id']
-    private_key_file_path = lti_config[platform_domain][0]['private_key_file']
-    public_key_file_path = lti_config[platform_domain][0]['public_key_file']
-    public_key = public_key_file_path if public_key_file_path else '/secret/public.key'
-    private_key = private_key_file_path if private_key_file_path else '/secret/private.key'
-    try:
-        private_key_content = open(private_key, 'r').read()
-        public_key_content = open(public_key, 'r').read()
-    except OSError as e:
-        return e
+    private_key_content = lti_config[platform_domain][0].get('private_key')
+    public_key_content = lti_config[platform_domain][0].get('public_key')
     tool_config.set_public_key(platform_domain, public_key_content, client_id=client_id)
     tool_config.set_private_key(platform_domain, private_key_content, client_id=client_id)
     return tool_config
@@ -179,7 +176,7 @@ def launch(request):
     if not check_if_success_getting_tool_config(config):
         return LTIError(config).response_json()
     CacheConfig = get_cache_config()
-    message_launch = DjangoMessageLaunch(request, config, launch_data_storage=CacheConfig.launch_data_storage)
+    message_launch = ExtendedDjangoMessageLaunch(request, config, launch_data_storage=CacheConfig.launch_data_storage)
     if not CacheConfig.is_dummy_cache:
         # fetch platform's public key from cache instead of calling the API will speed up the launch process
         message_launch.set_public_key_caching(CacheConfig.launch_data_storage,
