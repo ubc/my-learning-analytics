@@ -457,14 +457,22 @@ function createResourceAccessChart ({ data, weekRange, gradeSelection, resourceT
     const link = d.split('|')[0]
     const name = d.split('|')[1]
     const resourceDataIndex = resourceData.filter(rd => rd.resource_name === d)[0].index
-    const a = d3.select(this.parentNode).append('a')
-      .attr('xlink:title', name)
-      .attr('xlink:target', '_blank')
-      .attr('xlink:href', link)
-      .attr('text-anchor', 'start')
-      .attr('tabindex', resourceDataIndex * 10)
-    a.node().appendChild(this)
-
+ 
+    // module pages do not currently support links
+    if (link) {
+      const a = d3.select(this.parentNode).append('a')
+        .attr('xlink:title', name)
+        .attr('xlink:target', '_blank')
+        .attr('xlink:href', link)
+        .attr('text-anchor', 'start')
+        .attr('tabindex', resourceDataIndex * 10)
+      a.node().appendChild(this)
+    } else {
+      const a = d3.select(this.parentNode).append('p')
+         .text(name)
+         .attr('tabindex', resourceDataIndex * 10)
+      a.node().appendChild(this)
+    }
     const icon = d.split('|')[2]
     d3.select(this).insert('foreignObject')
       .attr('x', mainMargin.left * -1)
