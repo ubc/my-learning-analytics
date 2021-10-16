@@ -397,7 +397,7 @@ def resource_access_within_week(request, course_id=0):
     # Temporary workaround to include empty links for resources that don't fit resource link pattern
     # For example, Canvas page views do not fit this convention
     # <url_prefix> + <resource_id> + <url_postfix>
-    if RESOURCE_ACCESS_CONFIG.get(row.resource_type).get("urls").get("prefix") is None:
+    if RESOURCE_ACCESS_CONFIG.get(row.resource_type).get("urls") is None:
         output_df['resource_name'] = output_df.apply(
             lambda row:
                 ('' +
