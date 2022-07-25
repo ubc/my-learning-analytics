@@ -300,6 +300,7 @@ class DashboardCronJob(CronJobBase):
                 resource_access_df: pd.DataFrame = bq_job.result().to_dataframe()
                 total_bytes_billed += bq_job.total_bytes_billed
             else:
+                data_warehouse_course_ids = ','.join(["'"+str(x)+"'" for x in data_warehouse_course_ids])
                 query_params = {
                     'course_ids': data_warehouse_course_ids,
                     'course_ids_short': data_warehouse_course_ids_short,
