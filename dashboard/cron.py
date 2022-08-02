@@ -300,7 +300,11 @@ class DashboardCronJob(CronJobBase):
                 resource_access_df: pd.DataFrame = bq_job.result().to_dataframe()
                 total_bytes_billed += bq_job.total_bytes_billed
             else:
+                # Converting a list of integer into a comma-separated string.
+                # This step is required because the IN() condition accepts a comma-separated string.
+                # ex) [11111, 22222] => " '11111', '22222' "
                 data_warehouse_course_ids = ','.join(["'"+str(x)+"'" for x in data_warehouse_course_ids])
+                
                 query_params = {
                     'course_ids': data_warehouse_course_ids,
                     'course_ids_short': data_warehouse_course_ids_short,
