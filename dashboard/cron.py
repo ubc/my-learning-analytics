@@ -306,7 +306,7 @@ class DashboardCronJob(CronJobBase):
                 # data_warehouse_course_ids = ','.join(["'"+str(x)+"'" for x in data_warehouse_course_ids])
 
                 query_params = {
-                    'course_ids': data_warehouse_course_ids,
+                    'course_ids': tuple(data_warehouse_course_ids),
                     'course_ids_short': data_warehouse_course_ids_short,
                     'canvas_data_id_increment': settings.CANVAS_DATA_ID_INCREMENT,
                 }
