@@ -27,7 +27,7 @@ rules==2.2
 django-model-utils==4.0.0
 
 # These should be okay to update minors
-numpy==1.19.1
+numpy==1.22.0
 pandas==1.0.5
 pangres==2.1
 
