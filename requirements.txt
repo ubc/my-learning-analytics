@@ -32,7 +32,7 @@ pandas==1.0.5
 pangres==2.1
 
 pyOpenSSL==19.1.0
-protobuf==3.12.2
+protobuf==3.18.3
 
 # These caused problems in the past so test when updating
 djangosaml2==0.19.1
