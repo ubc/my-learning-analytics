@@ -223,12 +223,18 @@ WSGI_APPLICATION = 'dashboard.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'student_dashboard',
-        'USER': 'student_dashboard_user',
-        'PASSWORD': 'student_dashboard_pw',
-        'HOST': 'student_dashboard_mysql',  # Try 'localhost' if needed
-        'PORT': '3306',
+        **{
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'student_dashboard',
+            'USER': 'student_dashboard_user',
+            'PASSWORD': 'student_dashboard_password',
+            'HOST': 'localhost',
+            'PORT': 3306,
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+            },
+        },
+        **ENV.get('MYSQL', {})
     }
 }
 # optionally set LRS data source
