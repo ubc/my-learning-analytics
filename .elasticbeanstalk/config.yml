@@ -1,0 +1,18 @@
+branch-defaults:
+  master:
+    environment: null
+    group_suffix: null
+global:
+  application_name: myla
+  branch: null
+  default_ec2_keyname: myla
+  default_platform: Docker
+  default_region: ca-central-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: git
+  workspace_type: Application
