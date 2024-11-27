@@ -1,0 +1,154 @@
+[
+    {
+        "due_date": "2024-05-29 03:59:59.000",
+        "name": "Attitudes Quiz",
+        "course_id": "17700000000718327",
+        "id": "17700000002358326",
+        "points_possible": "4.000000000",
+        "assignment_group_id": "17700000000679170"
+    },
+    {
+        "due_date": "2024-05-16 03:59:59.000",
+        "name": "Syllabus Quiz",
+        "course_id": "17700000000718327",
+        "id": "17700000002358327",
+        "points_possible": "6.000000000",
+        "assignment_group_id": "17700000000679170"
+    },
+    {
+        "due_date": "2024-07-25 03:59:59.000",
+        "name": "When Affect Trumps Cognition (Discussion)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358328",
+        "points_possible": "20.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-07-18 03:59:59.000",
+        "name": "Social Learning (Discussion)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358329",
+        "points_possible": "20.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-05-18 03:59:59.000",
+        "name": "Meet and Greet",
+        "course_id": "17700000000718327",
+        "id": "17700000002358330",
+        "points_possible": "10.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-05-23 03:59:59.000",
+        "name": "Choosing a Seat (Discussion)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358331",
+        "points_possible": "20.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-05-30 03:59:59.000",
+        "name": "Internet's Influence on Attitudes, Beliefs, and Culture (Discussion)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358332",
+        "points_possible": "50.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-06-20 03:59:59.000",
+        "name": "Doing Your Part (Discussion)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358333",
+        "points_possible": "20.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-07-11 03:59:59.000",
+        "name": "Conflict and Peacemaking (Discussion)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358334",
+        "points_possible": "20.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-07-27 03:59:00.000",
+        "name": "Altruism (Discussion)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358335",
+        "points_possible": "20.000000000",
+        "assignment_group_id": "17700000000679171"
+    },
+    {
+        "due_date": "2024-05-27 03:59:00.000",
+        "name": "APA/Research Assignment",
+        "course_id": "17700000000718327",
+        "id": "17700000002358336",
+        "points_possible": "25.000000000",
+        "assignment_group_id": "17700000000679172"
+    },
+    {
+        "due_date": "2024-06-22 03:59:00.000",
+        "name": "Creating an Objective Test",
+        "course_id": "17700000000718327",
+        "id": "17700000002358337",
+        "points_possible": "50.000000000",
+        "assignment_group_id": "17700000000679172"
+    },
+    {
+        "due_date": "2024-08-08 03:59:00.000",
+        "name": "Final ",
+        "course_id": "17700000000718327",
+        "id": "17700000002358338",
+        "points_possible": "100.000000000",
+        "assignment_group_id": "17700000000679170"
+    },
+    {
+        "due_date": "2024-06-06 03:59:59.000",
+        "name": "Midterm Essay",
+        "course_id": "17700000000718327",
+        "id": "17700000002358339",
+        "points_possible": "150.000000000",
+        "assignment_group_id": "17700000000679170"
+    },
+    {
+        "due_date": "2024-06-15 03:59:00.000",
+        "name": "Online Love (Assignment)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358340",
+        "points_possible": "20.000000000",
+        "assignment_group_id": "17700000000679172"
+    },
+    {
+        "due_date": "2024-05-25 03:59:00.000",
+        "name": "Passing Judgment (Assignment)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358341",
+        "points_possible": "40.000000000",
+        "assignment_group_id": "17700000000679172"
+    },
+    {
+        "due_date": "2024-06-29 03:59:00.000",
+        "name": "Prejudice and Aggression (Assignment)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358342",
+        "points_possible": "50.000000000",
+        "assignment_group_id": "17700000000679172"
+    },
+    {
+        "due_date": "2024-07-20 03:59:59.000",
+        "name": "Social Cognition Reflection (Assignment)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358343",
+        "points_possible": "50.000000000",
+        "assignment_group_id": "17700000000679172"
+    },
+    {
+        "due_date": "2024-08-01 03:59:59.000",
+        "name": "Thinking Like a Social Psychologist (Assignment)",
+        "course_id": "17700000000718327",
+        "id": "17700000002358344",
+        "points_possible": "50.000000000",
+        "assignment_group_id": "17700000000679172"
+    }
+]
