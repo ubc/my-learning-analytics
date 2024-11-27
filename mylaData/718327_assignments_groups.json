@@ -1,0 +1,29 @@
+[
+    {
+        "id": "17700000000679170",
+        "course_id": "17700000000718327",
+        "weight": "0.0",
+        "name": "Quizzes & Exams",
+        "group_points": "260.000000000",
+        "drop_lowest": "0",
+        "drop_highest": "0"
+    },
+    {
+        "id": "17700000000679171",
+        "course_id": "17700000000718327",
+        "weight": "0.0",
+        "name": "Participation",
+        "group_points": "180.000000000",
+        "drop_lowest": "0",
+        "drop_highest": "0"
+    },
+    {
+        "id": "17700000000679172",
+        "course_id": "17700000000718327",
+        "weight": "0.0",
+        "name": "Assignments",
+        "group_points": "285.000000000",
+        "drop_lowest": "0",
+        "drop_highest": "0"
+    }
+]
