@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { styled } from '@mui/material/styles'
-
 import useOllama from '../hooks/useOllama'
 
 const PREFIX = 'LearningCoach'
@@ -13,10 +12,11 @@ const classes = {
 	grow: `${PREFIX}-grow`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+// Styled component
 const Root = styled('div')(({ theme }) => ({
 	[`& .${classes.root}`]: {
-		flexGrow: 1,
+		display: 'flex',
+		height: '100vh',
 	},
 	[`& .${classes.grow}`]: {
 		flexGrow: 1,
@@ -35,6 +35,8 @@ const LearningCoach = () => {
 			// User message
 			setMessages((prev) => [{ text: input, role: 'user' }, ...prev])
 
+			console.log('User message: ' + input)
+			e.target[0].value = ''
 			// LLM message
 			setTypingState(true)
 			try {
@@ -45,8 +47,6 @@ const LearningCoach = () => {
 			}
 			// await processMessage(messages)
 			setTypingState(false)
-
-			e.target[0].value = ''
 		}
 	}
 
@@ -85,7 +85,12 @@ const LearningCoach = () => {
 								placeholder='Type Away...'
 								style={styles.input}
 							/>
-							<button type='submit'>Type</button>
+							<button
+								type='submit'
+								style={styles.button}
+								disabled={typingState}>
+								Type
+							</button>
 						</form>
 					</div>
 				</div>
@@ -96,8 +101,7 @@ const LearningCoach = () => {
 
 const styles = {
 	outerContainer: {
-		padding: '20px',
-		paddingTop: 0,
+		padding: '20px 0', // Combined top and horizontal padding
 		height: '88vh',
 		width: '40vw',
 		minWidth: '40vw',
@@ -116,7 +120,7 @@ const styles = {
 	chatHistory: {
 		display: 'flex',
 		flexDirection: 'column-reverse',
-		flex: '2 1 0',
+		flex: 2, // Simplified flex shorthand
 		padding: '10px',
 		overflowY: 'auto',
 	},
@@ -125,7 +129,7 @@ const styles = {
 		marginBottom: '8px',
 		padding: '8px',
 		backgroundColor: '#ffadad',
-		borderRadius: '4px',
+		borderRadius: '10px', // Increased radius for a smoother look
 		maxWidth: '80%',
 	},
 	responseMessage: {
@@ -133,7 +137,7 @@ const styles = {
 		marginBottom: '8px',
 		padding: '8px',
 		backgroundColor: '#cce5ff',
-		borderRadius: '4px',
+		borderRadius: '10px', // Consistent with userMessage
 		maxWidth: '80%',
 	},
 	formContainer: {
@@ -143,12 +147,22 @@ const styles = {
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderTop: '2px solid black',
+		backgroundColor: '#ffffff', // Ensures contrast with the chat area
 	},
 	input: {
-		flex: '1',
-		padding: '8px',
-		border: '2px solid navy',
-		marginRight: '4px',
+		flex: 1,
+		padding: '10px', // Increased padding for a better input feel
+		border: '1px solid navy', // Reduced thickness for a cleaner look
+		borderRadius: '5px', // Slight rounding for a modern look
+		marginRight: '10px', // Increased margin for better spacing
+	},
+	button: {
+		padding: '10px 20px', // Added horizontal padding for better button dimensions
+		backgroundColor: 'navy',
+		color: 'white',
+		border: 'none',
+		borderRadius: '8px',
+		cursor: 'pointer',
 	},
 }
 

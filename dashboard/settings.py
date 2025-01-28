@@ -224,6 +224,9 @@ WSGI_APPLICATION = 'dashboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
         'NAME': 'student_dashboard',
         'USER': 'student_dashboard_user',
         'PASSWORD': 'student_dashboard_pw',

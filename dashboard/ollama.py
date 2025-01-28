@@ -47,7 +47,3 @@ def llama3(request):
     except ValueError:
         print('Invalid JSON response recieved')
         return JsonResponse({'error': 'Invalid JSON response recieved from the external service.'}, status=500)
-
-# TODO: Add chat history to this AI
-# TODO: Actually read the research paper and see what the prompting is about
-# TODO: Figure out how to import data into myLA

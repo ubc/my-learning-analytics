@@ -1,7 +1,5 @@
-// 1. Change to a sidebar design on the left
-// 2. Make it add an array of messages instead of a single one
-
 const useOllama = async (message) => {
+	console.log('User message 2: ' + message)
 	try {
 		// Change path URL (look into urls.py nad views.py)
 		const response = await fetch('/api/learningCoach', {
@@ -11,6 +9,8 @@ const useOllama = async (message) => {
 			},
 			body: JSON.stringify({ message: message }),
 		})
+
+		console.log('test')
 
 		if (response.ok) {
 			const data = await response.json()

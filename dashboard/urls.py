@@ -31,6 +31,8 @@ from dashboard.middleware.disableintrospection import DisableIntrospectionMiddle
 
 from . import views
 
+from . import ollama
+
 import watchman.views
 
 # Disable the Django admin login page
@@ -74,6 +76,9 @@ urlpatterns = [
         login_required(views.update_course_info), name='update_course_info'),
 
     path('su/', include('django_su.urls')),
+
+    # LearningCoach API
+    path('api/learningCoach', ollama.llama3, name='learningCoach'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
