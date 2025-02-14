@@ -1,9 +1,11 @@
 from importlib import resources
 import requests
 import json
-from django.http import StreamingHttpResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+
+import pprint
 
 
 @csrf_exempt
@@ -16,11 +18,11 @@ def llama3(request):
     session = request.session
     chat_history = session.get("chat_history", [])
 
-    print("\033c", end="")  # Clears the screen
-    print("\n")
-    print("=========")
-    print(chat_history)
-    print("=========")
+    # Quick code to reset chat_history
+    if message == "/reset":
+        session["chat_history"] = []  # Properly clear the chat history
+        session.modified = True  # Ensure session updates are saved
+        return JsonResponse({"message": "Chat history reset!"}, status=200)
 
     chat_history.append({"role": "user", "content": message})
 
@@ -33,36 +35,52 @@ def llama3(request):
         "stream": True,
     }
 
-    # Variable to store the AI's full response
-    ai_response_content = []
+    ai_response_content = []  # Store AI response chunks
 
     try:
         response = requests.post(url, headers=headers, json=data, stream=True)
         response.raise_for_status()
 
-        def stream_response():
-            for chunk in response.iter_lines():
-                if chunk:
-                    try:
-                        json_chunk = json.loads(chunk.decode("utf-8"))
-                        chunk_content = json_chunk.get("content", "")
-                        json_string = json.dumps(json_chunk) + "\n"
+        # **Pre-collect AI response before streaming**
+        collected_chunks = []
 
-                        # Store each chunk in the AI response list
+        for chunk in response.iter_lines():
+            if chunk:
+                try:
+                    json_chunk = json.loads(chunk.decode("utf-8"))
+                    chunk_content = json_chunk.get("message", {}).get("content", "")
+
+                    if chunk_content:
                         ai_response_content.append(chunk_content)
 
-                        yield json_string
-                    except json.JSONDecodeError:
-                        print("Invalid JSON chunk detected")
-                        yield json.dumps({"error": "Invalid JSON chunk"}) + "\n"
+                    collected_chunks.append(json.dumps(json_chunk) + "\n")
+                except json.JSONDecodeError:
+                    print("Invalid JSON chunk detected")
+                    collected_chunks.append(
+                        json.dumps({"error": "Invalid JSON chunk"}) + "\n"
+                    )
 
-        # After streaming completes, store the full AI response
-        full_ai_response = "".join(ai_response_content)
-        chat_history.append({"role": "assistant", "content": full_ai_response})
+        # **Process full AI response**
+        full_ai_response = "".join(ai_response_content).strip()
+        print(f"Full AI Response: {full_ai_response}")  # Debugging
 
-        # Save updated chat history back to the session
+        chat_history.append(
+            {"role": "assistant", "content": full_ai_response}
+        )  # Store response
+
+        # Save updated chat history
         session["chat_history"] = chat_history
         session.modified = True
+
+        # **Now, stream the collected chunks**
+        def stream_response():
+            for chunk in collected_chunks:
+                yield chunk
+
+        print("\033c", end="")  # Clears the screen
+        print("\n=========")
+        pprint.pprint(chat_history)
+        print("=========")
 
         return StreamingHttpResponse(stream_response(), content_type="text/plain")
 
@@ -95,7 +113,7 @@ def llama3(request):
 
 
 # TODO =========
-# 1. Fix the chat_history. Response bot is not working, so get that working
+# 1. Fix the chat_history. Response bot is not working, so get that working. WORKS NOW!!!!
 
 # Does changing urls are restarting the page reset the django session? Need to figure this out, and make it unique to user.ID. How to access the user.ID? I'm so fucking lost.
 

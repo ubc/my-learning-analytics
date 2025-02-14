@@ -10,6 +10,13 @@ const useOllama = async (message, onStreamChunk) => {
 			body: JSON.stringify({ message: message }),
 		})
 
+		// Handle reset chat history response
+		if (message === '/reset') {
+			const resetData = await response.json()
+			console.log('CM:', resetData.message) // Should print "Chat history reset!"
+			return resetData.message
+		}
+
 		if (!response.ok) {
 			const errorData = await response.json()
 			console.error('Failed to communicate with the server:', errorData)
@@ -52,7 +59,7 @@ const useOllama = async (message, onStreamChunk) => {
 				}
 			}
 		}
-    console.log('CM: ' + results)
+		console.log('CM: ' + results)
 		return results
 	} catch (error) {
 		console.error('An error occurred: ', error.message)

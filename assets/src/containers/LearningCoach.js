@@ -57,7 +57,6 @@ const LearningCoach = () => {
 						...updatedMessages[0],
 						text: updatedMessages[0].text + chunk,
 					}
-
 					return updatedMessages
 				})
 			})
