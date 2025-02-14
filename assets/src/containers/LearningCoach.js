@@ -129,7 +129,7 @@ const LearningCoach = () => {
 
 const styles = {
 	outerContainer: {
-		height: '93vh',
+		height: '92vh',
 		width: '100%',
 		overflow: 'hidden',
 		marginTop: '10px',
