@@ -17,6 +17,8 @@ const ChatButton = styled(IconButton)(({ theme }) => ({
 		backgroundColor: theme.palette.primary.dark,
 	},
 	borderRadius: '50%',
+	width: '56px',
+	height: '56px',
 }))
 
 const Sidebar = () => {
@@ -33,7 +35,11 @@ const Sidebar = () => {
 					{isOpen ? <Close /> : <Assistant />}
 				</ChatButton>
 			</Tooltip>
-			<Drawer open={isOpen} anchor='right' onClose={toggleChat}>
+			<Drawer
+				open={isOpen}
+				anchor='right'
+				onClose={toggleChat}
+				sx={{ '& .MuiDrawer-paper': { width: '65vw' } }}>
 				<LearningCoach />
 			</Drawer>
 		</div>

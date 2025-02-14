@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { styled } from '@mui/material/styles'
+import Markdown from 'react-markdown'
 import useOllama from '../hooks/useOllama'
 
 const PREFIX = 'LearningCoach'
@@ -24,52 +25,79 @@ const Root = styled('div')(({ theme }) => ({
 }))
 
 const LearningCoach = () => {
-	const [messages, setMessages] = useState([])
+	const [messages, setMessages] = useState([
+		{
+			text: 'What are you working on today, and how can I help you stay on track?',
+			role: 'assistant',
+		},
+	])
 	const [typingState, setTypingState] = useState(false)
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
 		const input = e.target[0].value
-		if (input.trim()) {
-			// User message
-			setMessages((prev) => [{ text: input, role: 'user' }, ...prev])
+		if (!input) return
 
-			console.log('User message: ' + input)
-			e.target[0].value = ''
-			// LLM message
-			setTypingState(true)
-			try {
-				const response = await useOllama(input)
-				setMessages((prev) => [{ text: response, role: 'assistant' }, ...prev])
-			} catch (error) {
-				console.error(error)
-			}
-			// await processMessage(messages)
-			setTypingState(false)
+		// User message
+		setMessages((prev) => [{ text: input, role: 'user' }, ...prev])
+		e.target[0].value = ''
+
+		// Assistant Message
+		setMessages((prev) => [{ text: '', role: 'assistant' }, ...prev])
+
+		setTypingState(true)
+
+		try {
+			await useOllama(input, (chunk) => {
+				// Appends chunk to last message
+				setMessages((prev) => {
+					const updatedMessages = [...prev]
+					updatedMessages[0] = {
+						...updatedMessages[0],
+						text: updatedMessages[0].text + chunk,
+					}
+
+					return updatedMessages
+				})
+			})
+		} catch (error) {
+			console.error(error)
 		}
+
+		setTypingState(false)
 	}
 
 	return (
 		<Root>
-			<h2 style={{ margin: 0, paddingLeft: '20px', paddingTop: '10px' }}>
+			<h2
+				style={{
+					paddingLeft: '20px',
+					borderBottom: '2px solid black',
+					margin: '0',
+					marginTop: '5px',
+				}}>
 				AI Assistant
 			</h2>
 			{/* Background */}
 			<div style={styles.outerContainer}>
 				<div style={styles.innerContainer}>
 					<div style={styles.chatHistory}>
-						{messages.map((message, index) => (
-							<p
-								key={index}
-								style={
-									message.role === 'user'
-										? styles.userMessage
-										: styles.responseMessage
-								}>
-								{message.text}
-							</p>
-						))}
+						{messages.map((message, index) => {
+							if (message.role === 'user') {
+								return (
+									<p key={index} style={styles.userMessage}>
+										{message.text}
+									</p>
+								)
+							} else {
+								return (
+									<div key={index} style={styles.responseMessage}>
+										<Markdown>{message.text}</Markdown>
+									</div>
+								)
+							}
+						})}
 					</div>
 					<div style={styles.formContainer}>
 						<form
@@ -89,7 +117,7 @@ const LearningCoach = () => {
 								type='submit'
 								style={styles.button}
 								disabled={typingState}>
-								Type
+								Send
 							</button>
 						</form>
 					</div>
@@ -101,26 +129,27 @@ const LearningCoach = () => {
 
 const styles = {
 	outerContainer: {
-		padding: '20px 0', // Combined top and horizontal padding
-		height: '88vh',
-		width: '40vw',
-		minWidth: '40vw',
-		maxWidth: '40vw',
+		height: '93vh',
+		width: '100%',
 		overflow: 'hidden',
+		marginTop: '10px',
+		paddingBottom: '10px',
 	},
 	innerContainer: {
 		display: 'flex',
-		margin: '0 auto',
-		backgroundColor: '#f5f5f5',
-		border: '2px solid black',
+		backgroundColor: '#F8F9FA',
+		border: '1px solid black',
 		height: '100%',
+		marginLeft: '10px',
+		marginRight: '10px',
 		flexDirection: 'column',
-		overflow: 'hidden',
+		overflow: 'auto',
+		borderRadius: '10px',
 	},
 	chatHistory: {
 		display: 'flex',
 		flexDirection: 'column-reverse',
-		flex: 2, // Simplified flex shorthand
+		flex: 1,
 		padding: '10px',
 		overflowY: 'auto',
 	},
@@ -128,26 +157,27 @@ const styles = {
 		alignSelf: 'flex-end',
 		marginBottom: '8px',
 		padding: '8px',
-		backgroundColor: '#ffadad',
-		borderRadius: '10px', // Increased radius for a smoother look
+		backgroundColor: '#E9ECEF',
+		borderRadius: '8px',
 		maxWidth: '80%',
 	},
 	responseMessage: {
-		alignSelf: 'flex-start',
-		marginBottom: '8px',
-		padding: '8px',
-		backgroundColor: '#cce5ff',
-		borderRadius: '10px', // Consistent with userMessage
+		paddingLeft: '8px',
+		paddingRight: '8px',
+		backgroundColor: '#FFFFFF',
+		borderRadius: '8px', // Consistent with userMessage
 		maxWidth: '80%',
+		border: '1px solid #DEE2E6',
+		borderRadius: '8px',
 	},
 	formContainer: {
-		height: '100px',
+		minHeight: '60px',
 		padding: '12px',
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderTop: '2px solid black',
-		backgroundColor: '#ffffff', // Ensures contrast with the chat area
+		backgroundColor: '#F8F9FA', // Ensures contrast with the chat area
 	},
 	input: {
 		flex: 1,
@@ -158,7 +188,7 @@ const styles = {
 	},
 	button: {
 		padding: '10px 20px', // Added horizontal padding for better button dimensions
-		backgroundColor: 'navy',
+		backgroundColor: '#ab7200',
 		color: 'white',
 		border: 'none',
 		borderRadius: '8px',
