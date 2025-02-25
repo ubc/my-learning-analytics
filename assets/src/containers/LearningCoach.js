@@ -49,7 +49,7 @@ const LearningCoach = () => {
 		setTypingState(true)
 
 		try {
-			await useOllama(input, (chunk) => {
+			const output = await useOllama(input, (chunk) => {
 				// Appends chunk to last message
 				setMessages((prev) => {
 					const updatedMessages = [...prev]
@@ -60,6 +60,9 @@ const LearningCoach = () => {
 					return updatedMessages
 				})
 			})
+			// Catch empty results;;;
+			setMessages((prev) => [{ text: output, role: 'assistant' }, ...prev])
+			console.log('test')
 		} catch (error) {
 			console.error(error)
 		}
@@ -85,9 +88,9 @@ const LearningCoach = () => {
 						{messages.map((message, index) => {
 							if (message.role === 'user') {
 								return (
-									<p key={index} style={styles.userMessage}>
-										{message.text}
-									</p>
+									<div key={index} style={styles.userMessage}>
+										<Markdown>{message.text}</Markdown>
+									</div>
 								)
 							} else {
 								return (
